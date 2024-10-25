@@ -12,10 +12,24 @@ import mlflow.sklearn
 import dagshub
 import mlflow
 from mlflow.models import infer_signature
+import os
 
+dagshub_token = os.getenv("DAGSHUB_PAT")
+if not dagshub_token:
+    raise EnvironmentError("DAGSHUB_PAT environment variable is not set")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
+
+dagshub_url = "https://dagshub.com"
+repo_owner = "bhattpriyang"
+repo_name = 'mlops_project_test'
+
+# Set the tracking URI for MLflow to log the experiment in DagsHub
+mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow') 
 # Initialize DagsHub for experiment tracking
-import dagshub
-dagshub.init(repo_owner='bhattpriyang', repo_name='mlops_project_test', mlflow=True)
+
+#dagshub.init(repo_owner='bhattpriyang', repo_name='mlops_project_test', mlflow=True)
 mlflow.set_experiment("Final_model1")
 mlflow.set_tracking_uri("https://dagshub.com/bhattpriyang/mlops_project_test.mlflow")
 
